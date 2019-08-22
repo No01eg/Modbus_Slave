@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+uartReceiver RS485receiver;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -129,7 +129,15 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 } 
 
 /* USER CODE BEGIN 1 */
-
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == huart1.Instance)
+	{
+	   	*(RS485receiver.buffer + RS485receiver.size++) = RS485receiver.rcv;
+	   	RS485receiver.timeout = RCV_TIMEOUT+20;
+	   	HAL_UART_Receive_DMA(huart, &RS485receiver.rcv, 1);
+	}
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

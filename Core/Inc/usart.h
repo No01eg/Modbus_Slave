@@ -34,6 +34,18 @@ extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
 
+#define RCV_TIMEOUT 40
+
+/* структура обработки приема с UART */
+typedef struct
+{
+	u8 rcv;
+	u8 size;
+	u8 timeout;
+	u8 *buffer;//data[RCV_DATA_MAX_SIZE];
+}uartReceiver;
+
+extern uartReceiver RS485receiver;
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
