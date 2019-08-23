@@ -24,6 +24,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "Modbus/mb.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -86,7 +87,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  RS485receiver.buffer = receiveBuf;
+  RS485receiver.buffer = mbSlave.request.frame;//receiveBuf;
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -96,20 +97,32 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
+
   HAL_UART_Receive_DMA(&huart1, &RS485receiver.rcv, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  MB_SlaveInit();
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-	  HAL_UART_Transmit(&huart1, "HEllo\r\n",7, 250);
+	  if(mbSlave.request.length > 0)
+	  {
+	  	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+		  modbusParseRequest(&mbSlave);
+	  	  mbSlave.request.length = 0;
+	  	  HAL_UART_Transmit(&huart1, mbSlave.response.frame, mbSlave.response.length, 230);
+	  	  HAL_Delay(100);
+	  	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+	  }
+	  //HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+	  //HAL_UART_Transmit(&huart1, "HEllo\r\n",7, 250);
 
-	  HAL_Delay(1000);
+	  //HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }

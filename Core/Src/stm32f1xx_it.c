@@ -23,6 +23,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "Modbus/mb.h"
 #include "usart.h"
 /* USER CODE END Includes */
 
@@ -316,9 +317,9 @@ void TIM2_IRQHandler(void)
   	{
   	  //TODO по идее тут лучше сразу во входной массив записывать, нафиг промежуточные буферы
     	//memcpy(mbSlave.request.frame,RS485receiver.buffer,RS485receiver.size);
-  		 //mbSlave.request.length = RS485receiver.size;
+  		 mbSlave.request.length = RS485receiver.size;
 
-  		HAL_UART_Transmit(&huart1, RS485receiver.buffer, RS485receiver.size, 300);
+  		//HAL_UART_Transmit(&huart1, RS485receiver.buffer, RS485receiver.size, 300);
   		RS485receiver.size = 0;
   	  }
     }

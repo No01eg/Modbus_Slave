@@ -134,7 +134,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if(huart->Instance == huart1.Instance)
 	{
 	   	*(RS485receiver.buffer + RS485receiver.size++) = RS485receiver.rcv;
-	   	RS485receiver.timeout = RCV_TIMEOUT+20;
+	   	RS485receiver.timeout = RCV_TIMEOUT;
 	   	HAL_UART_Receive_DMA(huart, &RS485receiver.rcv, 1);
 	}
 }
