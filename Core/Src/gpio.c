@@ -20,7 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
 /* USER CODE BEGIN 0 */
-
+#include "usart.h"
+#include "math.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -87,7 +88,40 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+/*void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	//проверяем, необходимо ли тестировать вход
+	uint8_t act = (GPIO_Pin & DINN_Act) ? 1 : 0;
+	if(act)
+	{
+		uint8_t step = (uint8_t)log2(GPIO_Pin);
+		uint32_t now_time = HAL_GetTick();
+		//проверяем на дребезг
+		if(now_time - __time_check[step] > DEBOUNCE)
+		{
+			GPIO_TypeDef * GPIO;
+			if(GPIO_Pin == 1 || GPIO_Pin == 2)
+				GPIO = GPIOG;
+			else
+				GPIO = GPIOE;
+			//TODO Реализация защиты от дребезга контактов
+			//чтение и сравнение входа
+			GPIO_PinState state = (HAL_GPIO_ReadPin(GPIO, GPIO_Pin)==1)?0:1;
+			uint8_t val = ((GPIO_Pin & __pins_input_value) ? 1 : 0);
+			if(val != state)
+			{
+				if(state == 1)
+					__pins_input_value |= GPIO_Pin;
+				else
+					__pins_input_value &= ~GPIO_Pin;
+				__time_check[step] = now_time;
+			}
+			uint8_t value = (uint8_t)state + '0';
+			//HAL_UART_Transmit(&huart7, &value, 1, 30);
+		}
+	}
 
+}*/
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
