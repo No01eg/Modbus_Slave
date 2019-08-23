@@ -33,7 +33,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-u8 receiveBuf[256];
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -87,7 +87,10 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  RS485receiver.buffer = mbSlave.request.frame;//receiveBuf;
+
+  // Задаем массив под входной пакет MODBUS приемный буфер UART'a
+  RS485receiver.buffer = mbSlave.request.frame;
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -96,33 +99,39 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+
+  // запускаем таймер для реализации таймаута при чтении по UART
   HAL_TIM_Base_Start_IT(&htim2);
 
+  // активируем механизм приема данных с таймаутом.
   HAL_UART_Receive_DMA(&huart1, &RS485receiver.rcv, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  // конфигурация Slave modbus
   MB_SlaveInit();
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	  // Если пакет пришел, то разбираем его и отправляем ответный пакет
 	  if(mbSlave.request.length > 0)
 	  {
 	  	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+	  	  //Разбор пакета (комплексный)
 		  modbusParseRequest(&mbSlave);
+		  // сброс размера длины входного пакета, ибо по нему проверяем что к нам пришел пакет
 	  	  mbSlave.request.length = 0;
+	  	  // отправляем ответ
 	  	  HAL_UART_Transmit(&huart1, mbSlave.response.frame, mbSlave.response.length, 230);
-	  	  HAL_Delay(100);
+	  	  //HAL_Delay(100);
 	  	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 	  }
-	  //HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-	  //HAL_UART_Transmit(&huart1, "HEllo\r\n",7, 250);
-
-	  //HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
