@@ -40,11 +40,16 @@ typedef unsigned char      u8;
 typedef unsigned short     u16;
 typedef unsigned int       u32;
 typedef unsigned long long u64;
+
+#include "dataRegs.h"
+
+
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+#define FIRMWARE_VERSION	"0.1.5"
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

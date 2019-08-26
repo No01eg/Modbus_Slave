@@ -28,7 +28,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+ModbusSlave mbSlave;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
