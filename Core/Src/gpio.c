@@ -23,7 +23,7 @@
 #include "usart.h"
 #include "math.h"
 /* USER CODE END 0 */
-
+#include "dataRegs.h"
 /*----------------------------------------------------------------------------*/
 /* Configure GPIO                                                             */
 /*----------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = DIN1_Pin|DIN2_Pin|DIN3_Pin|DIN4_Pin 
                           |DIN5_Pin|DIN6_Pin|DIN7_Pin|DIN8_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
@@ -88,9 +88,29 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
-/*void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	//проверяем, необходимо ли тестировать вход
+	u8 step = (u8)log2(GPIO_Pin);
+	if(getStatusBit(step))
+	{
+		u32 now_time = HAL_GetTick();
+		//проверяем дребезг
+		if(now_time - __time_check[step] > 50) //FIx
+		{
+			//чтение и сравнение входа
+			GPIO_PinState state = (HAL_GPIO_ReadPin(GPIOA, GPIO_Pin)==1)?0:1;
+			uint8_t val = getBitFromRegPack(memMapDigInput[0].dataPoint, step);//((GPIO_Pin & __pins_input_value) ? 1 : 0);
+			if(val != state)
+			{
+				if(state == 1)
+					setBitIntoRegPack(memMapDigInput[0].dataPoint, step);//__pins_input_value |= GPIO_Pin;
+				else
+					resetBitIntoRegPack(memMapDigInput[0].dataPoint, step);//__pins_input_value &= ~GPIO_Pin;
+				__time_check[step] = now_time;
+			}
+		}
+	}
+	/*//проверяем, необходимо ли тестировать вход
 	uint8_t act = (GPIO_Pin & DINN_Act) ? 1 : 0;
 	if(act)
 	{
@@ -119,9 +139,9 @@ void MX_GPIO_Init(void)
 			uint8_t value = (uint8_t)state + '0';
 			//HAL_UART_Transmit(&huart7, &value, 1, 30);
 		}
-	}
+	}*/
 
-}*/
+}
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

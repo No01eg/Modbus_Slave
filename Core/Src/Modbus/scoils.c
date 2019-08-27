@@ -15,7 +15,6 @@
 #if defined(MODBUS_F01S) || defined(MODBUS_F02S)
 ModbusError modbusParseRequest0102(ModbusSlave *status, ModbusParser *parser)
 {
-	dataPage *map = &memMapCoils[0];
 	//чтение множества дискретных регистров или входов
 	// используется данные из объединения
 

@@ -11,17 +11,25 @@
 
 //ячейки хранения регистров и дискрет
 const u8 device_name[] = "MLC-DI-01";
-//u32 device_ID = 0;
+
+
 // дискретные входы
-u8 DIN[4] = {0x55, 0xaa, 0x03, 0x15};
+
 u8 DOUT[3] = {0x71, 0x33, 0x84};
 u16 AIN[3] = {123, 576, 10543};
 
-
+/*входные дискреты*/
+u8 DIN[4] = {0x55, 0xaa, 0x03, 0x15};
+/*выходные дискреты*/
+u8 DoutMask[2] = {0xff,0xff}; // активность входных дискрет
 /*Входные регистры данных*/
-u16 DevInfo[256];
+u16 DevInfo[256]; // - данные об устройстве
 u16 inputRegs[3] = {515, 333, 20115};
+/*выходные регистры*/
 
+
+//---
+u32 __time_check[sizeof(DIN)*8];
 //пока что 4 страницы с данными
 
 // страница с дискретными выходами
@@ -33,7 +41,14 @@ dataPage memMapRegs[2];
 // страницы с входными регистрами
 dataPage memMapInputsRegs[3];
 
-
+/*
+ * Задание свойств страницы
+ * -----------------------------
+ * page - заполняемая страница
+ * numPage - индекс страницы
+ * count - количество записей на странице
+ * massive - рабочий массив хранения данных
+ * */
 void allocDataInMemMap(dataPage *page, DataAllocPageNum numPage, u16 count, void* massive)
 {
 	page->page = numPage;
@@ -41,12 +56,17 @@ void allocDataInMemMap(dataPage *page, DataAllocPageNum numPage, u16 count, void
 	page->dataPoint = massive;
 }
 
+
+/*
+ * Размещение данных по страницам на карте данных
+ * */
 void allocateDataInMap(void)
 {
 	//device_ID = *(u32*)(0x1ff0f420); //изъятие уникального ID - адрес для STM32F676
 	//Запись информации об устройстве: ID & название устройства
-	u32 device_ID = *(u32*)(0x1ffff7E8);
+	//u32 device_ID = *(u32*)(0x1ffff7E8);
 
+	// запись ID контроллера
 	memcpy((u8*)&DevInfo[0], (u8*)0x1ffff7E8 + 2, 2);
 	memcpy((u8*)&DevInfo[1], (u8*)0x1ffff7E8, 2);
 
@@ -63,19 +83,29 @@ void allocateDataInMap(void)
 	allocDataInMemMap(&memMapInputsRegs[1], 1, sizeof(AIN), (u16*)AIN);
 	// Размещение цифровых входов
 	allocDataInMemMap(&memMapDigInput[AP_DIGIN_DATA_INPUTS], AP_DIGIN_DATA_INPUTS, sizeof(DIN)*8, (u8*)DIN);
-
+	// размещение цифровых выходов
 	allocDataInMemMap(&memMapCoils[0], 0, sizeof(DOUT)*8, (u8*)DOUT);
 
 	allocDataInMemMap(&memMapInputsRegs[2], 1, sizeof(inputRegs),(u16*)inputRegs);
-	/*memMapInputsRegs[0].page = 0;
-	memMapInputsRegs[0].count = 7;
-	memMapInputsRegs[0].dataPoint = (u16*)DevInfo;*/
+}
 
+/* Определение */
+u8 getStatusBit(u8 index)
+{
+	return (DoutMask[index >> 3] >>(index % 8)) & 1;
+}
 
-	//размещение цифровых входов
-	/*memMapDigInput[0].page = 0;
-	memMapDigInput[0].count = sizeof(DIN) * 8;// = {0, sizeof(DIN)*8, (u8*)DIN};
-	memMapDigInput[0].dataPoint = (u8*)DIN;*/
+void setBitIntoRegPack(u8 *pack, u16 index)
+{
+	pack[index >> 3] |= 1 << (index % 8);
+}
 
-	//memSrc[1].
+void resetBitIntoRegPack(u8 *pack, u16 index)
+{
+	pack[index >> 3] &= ~(1 << (index % 8));
+}
+
+u8 getBitFromRegPack(u8 *pack, u16 index)
+{
+	return (pack[index >> 3] >> (index % 8)) & 1;
 }

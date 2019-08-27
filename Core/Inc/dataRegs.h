@@ -8,18 +8,11 @@
 #ifndef INC_DATAREGS_H_
 #define INC_DATAREGS_H_
 
-/*extern u8 DIN[];
-
-
-
-extern u16 AIN[];*/
 extern u8 DOUT[];
 
-typedef enum dataAllocPageNum
-{
-	AP_COILS_DATA_DOUT = 0,
-	AP_DIGIN_DATA_INPUTS = 0,
-}DataAllocPageNum;
+extern u32 __time_check[];
+
+#include "mapAlloc.h"
 
 typedef struct
 {
@@ -39,5 +32,13 @@ extern dataPage memMapInputsRegs[3];
 
 // инициализация карты размещения данных дискретов и регистров
 void allocateDataInMap(void);
+
+u8 getStatusBit(u8 index);
+
+void setBitIntoRegPack(u8 *pack, u16 index);
+
+void resetBitIntoRegPack(u8 *pack, u16 index);
+
+u8 getBitFromRegPack(u8 *pack, u16 index);
 
 #endif /* INC_DATAREGS_H_ */
