@@ -15,6 +15,7 @@
 #if defined(MODBUS_F01S) || defined(MODBUS_F02S)
 ModbusError modbusParseRequest0102(ModbusSlave *status, ModbusParser *parser)
 {
+	dataPage *map = &memMapCoils[0];
 	//чтение множества дискретных регистров или входов
 	// используетс€ данные из объединени€
 
@@ -51,6 +52,20 @@ ModbusError modbusParseRequest0102(ModbusSlave *status, ModbusParser *parser)
 	//проверка что индекс в диапазоне
 	if(count == 0 || count > 2000)
 		return modbusBuildExceptionErr(status, parser->base.function, MODBUS_EXCEP_ILLEGAL_VALUE, MODBUS_FERROR_COUNT);
+
+	//“ут переопредел€ем указатели на массивы в зависимости от индекса
+	if(parser->base.function == 1)
+	{
+		status->coils = memMapCoils[index >> 8].dataPoint;
+		status->coilCount = memMapCoils[index >> 8].count;
+		index = index & 0xff;
+	}
+	else if(parser->base.function == 2)
+	{
+		status->discreteInputs = memMapDigInput[index >> 8].dataPoint;
+		status->discreteInputCount = memMapDigInput[index >> 8].count;
+		index = index & 0xff;
+	}
 
 	//ѕроверка на доступность дискретов
 	#ifdef MODBUS_COIL_CALLBACK

@@ -46,9 +46,26 @@ ModbusError modbusParseRequest0304(ModbusSlave *status, ModbusParser *parser)
 	u16 index = modbusMatchEndian(parser->request0304.index);
 	u16 count = modbusMatchEndian(parser->request0304.count);
 
+	//TODO при указании адреса разбивать по секциям, старший байт определяет какой массив будет использоваться,
+	// а младший байт указывает смещение в самом массиве, толкьо как это сделать?
+
 	//проверка на количество в 1 пакете
 	if(count == 0 || count > 125)
 		return modbusBuildExceptionErr(status, parser->base.function, MODBUS_EXCEP_ILLEGAL_VALUE, MODBUS_FERROR_COUNT);
+
+	//Тут переопределяем указатели на массивы в зависимости от индекса
+	if(parser->base.function == 3)
+	{
+		status->registers = memMapRegs[index >> 8].dataPoint;
+		status->registerCount = memMapRegs[index >> 8].count;
+		index = index & 0xff;
+	}
+	else if(parser->base.function == 4)
+	{
+		status->inputRegisters = memMapInputsRegs[index >> 8].dataPoint;
+		status->inputRegisterCount = memMapInputsRegs[index >> 8].count;
+		index = index & 0xff;
+	}
 
 	//проверка доступности регистров
 	#ifdef MODBUS_REGISTER_CALLBACK

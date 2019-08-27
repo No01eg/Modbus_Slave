@@ -25,6 +25,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "Modbus/mb.h"
+#include "dataRegs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -109,7 +110,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+  //инициализация карты данных
+  allocateDataInMap();
   // конфигурация Slave modbus
   MB_SlaveInit();
 

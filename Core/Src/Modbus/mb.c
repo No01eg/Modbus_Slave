@@ -89,15 +89,17 @@ u16 crc16(const u8* data, u8 lenght)
 
 void MB_SlaveInit()
 {
-	mbSlave.coilCount = 32;
 
-	mbSlave.coils = DIN;
+	mbSlave.coilCount = memMapCoils[0].count;
+	mbSlave.coils = (u8*)memMapCoils[0].dataPoint;
 
-	mbSlave.discreteInputCount = 24;
-	mbSlave.discreteInputs = DOUT;
+	// По умолчанию у нас цифровые входы
+	mbSlave.discreteInputCount = memMapDigInput[AP_DIGIN_DATA_INPUTS].count;
+	mbSlave.discreteInputs = (u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint;
 
-	mbSlave.registerCount = 3;
-	mbSlave.registers = AIN;
+	//По умолчанию сделаем аналоговые входы
+	mbSlave.registerCount = memMapInputsRegs[1].count;
+	mbSlave.registers = (u16*)memMapInputsRegs[1].dataPoint;
 
 	mbSlave.address = 3;
 
