@@ -42,14 +42,13 @@ typedef unsigned int       u32;
 typedef unsigned long long u64;
 
 #include "dataRegs.h"
-
-
+#include "config.h"
 
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-#define FIRMWARE_VERSION	"0.1.5"
+#define FIRMWARE_VERSION	"0.1.6"
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -97,6 +96,7 @@ void Error_Handler(void);
 #define DIN8_GPIO_Port GPIOA
 #define DIN8_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
+
 
 /* USER CODE END Private defines */
 

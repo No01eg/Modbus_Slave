@@ -82,6 +82,11 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
+  // Чтение конфигурации
+  readConfig();
+
+  //preloadDefaultConfig();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
