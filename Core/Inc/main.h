@@ -95,6 +95,30 @@ void Error_Handler(void);
 #define DIN8_Pin GPIO_PIN_7
 #define DIN8_GPIO_Port GPIOA
 #define DIN8_EXTI_IRQn EXTI9_5_IRQn
+#define DIN11_Pin GPIO_PIN_10
+#define DIN11_GPIO_Port GPIOB
+#define DIN11_EXTI_IRQn EXTI15_10_IRQn
+#define DIN12_Pin GPIO_PIN_11
+#define DIN12_GPIO_Port GPIOB
+#define DIN12_EXTI_IRQn EXTI15_10_IRQn
+#define DIN13_Pin GPIO_PIN_12
+#define DIN13_GPIO_Port GPIOB
+#define DIN13_EXTI_IRQn EXTI15_10_IRQn
+#define DIN14_Pin GPIO_PIN_13
+#define DIN14_GPIO_Port GPIOB
+#define DIN14_EXTI_IRQn EXTI15_10_IRQn
+#define DIN15_Pin GPIO_PIN_14
+#define DIN15_GPIO_Port GPIOB
+#define DIN15_EXTI_IRQn EXTI15_10_IRQn
+#define DIN16_Pin GPIO_PIN_15
+#define DIN16_GPIO_Port GPIOB
+#define DIN16_EXTI_IRQn EXTI15_10_IRQn
+#define DIN9_Pin GPIO_PIN_8
+#define DIN9_GPIO_Port GPIOB
+#define DIN9_EXTI_IRQn EXTI9_5_IRQn
+#define DIN10_Pin GPIO_PIN_9
+#define DIN10_GPIO_Port GPIOB
+#define DIN10_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 
 

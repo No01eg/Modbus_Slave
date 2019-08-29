@@ -22,8 +22,9 @@
 /* USER CODE BEGIN 0 */
 #include "usart.h"
 #include "math.h"
-/* USER CODE END 0 */
 #include "dataRegs.h"
+/* USER CODE END 0 */
+
 /*----------------------------------------------------------------------------*/
 /* Configure GPIO                                                             */
 /*----------------------------------------------------------------------------*/
@@ -47,6 +48,7 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
@@ -65,6 +67,14 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin 
+                           PBPin PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = DIN11_Pin|DIN12_Pin|DIN13_Pin|DIN14_Pin 
+                          |DIN15_Pin|DIN16_Pin|DIN9_Pin|DIN10_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
@@ -85,31 +95,40 @@ void MX_GPIO_Init(void)
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 }
 
 /* USER CODE BEGIN 2 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	/*GPIO_TypeDef *GPIO = (GPIO_Pin & 0x1ff) ? GPIOA : GPIOB;
 	u8 step = (u8)log2(GPIO_Pin);
-	if(getStatusBit(step))
+	if(getStatusBit(step))//getBitFromRegPack(DoutMask, step)
 	{
 		u32 now_time = HAL_GetTick();
 		//провер€ем дребезг
-		if(now_time - __time_check[step] > 50) //FIx
+		if(now_time - __time_check[step] > 1) //FIx
 		{
 			//чтение и сравнение входа
-			GPIO_PinState state = (HAL_GPIO_ReadPin(GPIOA, GPIO_Pin)==1)?0:1;
-			uint8_t val = getBitFromRegPack(memMapDigInput[0].dataPoint, step);//((GPIO_Pin & __pins_input_value) ? 1 : 0);
+			GPIO_PinState state = HAL_GPIO_ReadPin(GPIO, GPIO_Pin) ? 0 : 1;
+			uint8_t val = getBitFromRegPack(memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint, step);//((GPIO_Pin & __pins_input_value) ? 1 : 0);
 			if(val != state)
 			{
 				if(state == 1)
-					setBitIntoRegPack(memMapDigInput[0].dataPoint, step);//__pins_input_value |= GPIO_Pin;
+					setBitIntoRegPack(memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint, step);//__pins_input_value |= GPIO_Pin;
 				else
-					resetBitIntoRegPack(memMapDigInput[0].dataPoint, step);//__pins_input_value &= ~GPIO_Pin;
+					resetBitIntoRegPack(memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint, step);//__pins_input_value &= ~GPIO_Pin;
 				__time_check[step] = now_time;
 			}
+
+
 		}
-	}
+	}*/
+	/* сразу перенаправл€ем байт в массив, побитно - долго*/
+	*((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint) = ~((GPIOA->IDR) & 0xff);
+	*((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint + 1) = ~((GPIOB->IDR >> 8) & 0xff);
 	/*//провер€ем, необходимо ли тестировать вход
 	uint8_t act = (GPIO_Pin & DINN_Act) ? 1 : 0;
 	if(act)

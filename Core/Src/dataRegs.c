@@ -19,14 +19,14 @@ u8 DOUT[3] = {0x71, 0x33, 0x84};
 u16 AIN[3] = {123, 576, 10543};
 
 /*входные дискреты*/
-u8 DIN[4] = {0x55, 0xaa, 0x03, 0x15};
+u8 DIN[2];// = {0x55, 0xaa};
 /*выходные дискреты*/
 u8 DoutMask[2] = {0xff,0xff}; // активность входных дискрет
 /*Входные регистры данных*/
 u16 DevInfo[256]; // - данные об устройстве
 u16 inputRegs[3] = {515, 333, 20115};
 /*выходные регистры*/
-
+u16 configRegs[5];
 
 //---
 /* массив хранения временных отрезков для определения дребезга контактов */
@@ -86,8 +86,11 @@ void allocateDataInMap(void)
 	allocDataInMemMap(&memMapDigInput[AP_DIGIN_DATA_INPUTS], AP_DIGIN_DATA_INPUTS, sizeof(DIN)*8, (u8*)DIN);
 	// размещение цифровых выходов
 	allocDataInMemMap(&memMapCoils[0], 0, sizeof(DOUT)*8, (u8*)DOUT);
-
+	//test
 	allocDataInMemMap(&memMapInputsRegs[2], 1, sizeof(inputRegs),(u16*)inputRegs);
+
+	//размещение регистров конфигурации в карте данных
+	allocDataInMemMap(&memMapRegs[0], 0, sizeof(configRegs), (u16*)configRegs);
 }
 
 /* Определение */

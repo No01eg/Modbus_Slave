@@ -24,11 +24,12 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "Modbus/mb.h"
-#include "dataRegs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "Modbus/mb.h"
+#include "dataRegs.h"
+
 ModbusSlave mbSlave;
 /* USER CODE END Includes */
 
