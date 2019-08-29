@@ -76,11 +76,25 @@ void preloadDefaultConfig(void/*Config *cfg*/)
 {
 	cfg.address = 3;
 	cfg.uartSpeed = 115200;
-	cfg.Uart.databits = 8;
-	cfg.Uart.parity = 0;
-	cfg.Uart.stopbits = 0;
+	cfg.UartCfg.uart_unpk.databits = 8;
+	cfg.UartCfg.uart_unpk.parity = 0;
+	cfg.UartCfg.uart_unpk.stopbits = 0;
 	cfg.actMask = 0xffff;
 	cfg.debounce = 50;
 
 	writeConfig();
+}
+
+/*
+ *
+ * */
+void configToMemMap(void)
+{
+	u16 *ptr = memMapRegs[0].dataPoint;
+	*((u16*)ptr++) = cfg.address;
+	*((u32*)ptr) = cfg.uartSpeed;
+	ptr += 2;
+	*((u16*)ptr++) = (u16)cfg.UartCfg.uart_pack;
+	*((u16*)ptr++) = cfg.actMask;
+	*((u16*)ptr++) = cfg.debounce;
 }

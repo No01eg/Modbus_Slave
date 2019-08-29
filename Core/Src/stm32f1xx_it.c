@@ -317,14 +317,12 @@ void TIM2_IRQHandler(void)
   {
     if(--RS485receiver.timeout == 0)
   	{
-  	  //TODO по идее тут лучше сразу во входной массив записывать, нафиг промежуточные буферы
-    	//memcpy(mbSlave.request.frame,RS485receiver.buffer,RS485receiver.size);
-  		 mbSlave.request.length = RS485receiver.size;
-
-  		//HAL_UART_Transmit(&huart1, RS485receiver.buffer, RS485receiver.size, 300);
+    	mbSlave.request.length = RS485receiver.size;
   		RS485receiver.size = 0;
   	  }
     }
+
+  //TODO Стоит ли добавлять функцию повторной записи входов если вдруг время больше дребезга
   /* USER CODE END TIM2_IRQn 1 */
 }
 

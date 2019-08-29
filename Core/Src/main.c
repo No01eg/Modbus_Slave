@@ -118,6 +118,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   //инициализация карты данных
   allocateDataInMap();
+  configToMemMap();
   // конфигурация Slave modbus
   MB_SlaveInit();
 

@@ -10,16 +10,23 @@
 
 #include "main.h"
 
+typedef struct __attribute__( (__packed__ )) uart
+{
+	u8 databits : 4; /* кол-во бит данных */
+	u8 stopbits : 2; /* кол-во стоп-битов */
+	u8 parity 	: 2; /* четность (0 - нет, 1 - чет, 2 - нечет) */
+}Uart;
+
+typedef union
+{
+	u8 uart_pack;
+	Uart uart_unpk;
+}packUart;
 //—труктура конфигурации модул€
 typedef struct __attribute__( (__packed__ )) config
 {
 	u32 uartSpeed; /* скорость передачи */
-	struct __attribute__( (__packed__ )) uart
-	{
-		u8 databits : 4; /* кол-во бит данных */
-		u8 stopbits : 2; /* кол-во стоп-битов */
-		u8 parity 	: 2; /* четность (0 - нет, 1 - чет, 2 - нечет) */
-	}Uart;
+	packUart UartCfg;
 	u8 address;   /* локальный адрес модбас */
 	u16 debounce; /*врем€ контрол€ дребезга контактов */
 	u16 actMask;  /* маска на входные каналы */
@@ -33,5 +40,7 @@ void readConfig(void/*Config *cfg*/);
 void writeConfig(void/*const Config *cfg*/);
 /* ѕредустановка конфигурации по умолчанию */
 void preloadDefaultConfig(void/*Config *cfg*/);
+
+void configToMemMap(void);
 
 #endif /* INC_CONFIG_H_ */
