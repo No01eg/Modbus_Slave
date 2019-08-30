@@ -123,6 +123,7 @@ int main(void)
   //подготовка RS485 к работе
   RS485receiver.size = 0;
   RS485receiver.timeout = 0;
+  DebounseTime = 0;
 
   // конфигурация Slave modbus
   MB_SlaveInit();
@@ -151,6 +152,7 @@ int main(void)
 	  	  //HAL_Delay(100);
 	  	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
+	  	  //сохранения конфига, принятого по модбасу и применение новых настроек
 	  	  if(err == MODBUS_ERROR_OK && (mbSlave.request.frame[1] == 6 || mbSlave.request.frame[1] == 16))
 	  	  {
 	  		 importCfgFromMemAndSave();
@@ -161,6 +163,7 @@ int main(void)
 	  		 HAL_UART_Receive_DMA(&huart1, &RS485receiver.rcv, 1);
 	  		 RS485receiver.size = 0;
 	  		 RS485receiver.timeout = 0;
+	  		 //сбрасываем инфу о команде, чтобы повторно сюда не забредать без надобности
 	  		 mbSlave.request.frame[1] = 0;
 	  	  }
 	  }

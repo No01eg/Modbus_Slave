@@ -9,6 +9,10 @@
 #include "dataRegs.h"
 #include "string.h"
 
+
+u16 DebounseTime;
+
+
 //€чейки хранени€ регистров и дискрет
 const u8 device_name[] = "MLC-DI-01";
 

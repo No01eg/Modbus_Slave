@@ -29,7 +29,8 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-
+#define ACT_INPUT_MACRO_L (*((u8*)(memMapRegs[0].dataPoint + 10)))
+#define ACT_INPUT_MACRO_H (*((u8*)(memMapRegs[0].dataPoint + 10)))
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -322,6 +323,14 @@ void TIM2_IRQHandler(void)
   	  }
     }
 
+  if(DebounseTime > 0)
+  {
+	  if(--DebounseTime == 0)
+	  {
+		  *((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint) = ~((GPIOA->IDR) & 0xff) & ACT_INPUT_MACRO_L;
+		  *((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint + 1) = ~((GPIOB->IDR >> 8) & 0xff) & ACT_INPUT_MACRO_H;
+	  }
+  }
   //TODO Стоит ли добавлять функцию повторной записи входов если вдруг время больше дребезга
   /* USER CODE END TIM2_IRQn 1 */
 }

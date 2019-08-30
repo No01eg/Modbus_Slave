@@ -8,6 +8,8 @@
 #ifndef INC_DATAREGS_H_
 #define INC_DATAREGS_H_
 
+extern u16 DebounseTime;
+
 extern u8 DOUT[];
 
 extern u32 __time_check[];
