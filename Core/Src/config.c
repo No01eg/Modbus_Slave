@@ -23,7 +23,7 @@ Config cfg;
 void __FlashErase(u32 Sector, u32 count)
 {
 	FLASH_EraseInitTypeDef EraseInitStruct;
-	u32 SectorError;
+	uint32_t SectorError;
 
 	EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
 	EraseInitStruct.Banks = FLASH_BANK_1;
@@ -78,9 +78,9 @@ void preloadDefaultConfig(void/*Config *cfg*/)
 	cfg.uartSpeed = 115200;
 	cfg.UartCfg.uart_unpk.databits = 8;
 	cfg.UartCfg.uart_unpk.parity = 0;
-	cfg.UartCfg.uart_unpk.stopbits = 0;
-	cfg.actMask = 0xffff;
+	cfg.UartCfg.uart_unpk.stopbits = 1;
 	cfg.debounce = 50;
+	cfg.actMask = 0xffff;
 
 	writeConfig();
 }
@@ -95,19 +95,21 @@ void exportConfigToMemMap(void)
 	*((u32*)ptr) = cfg.uartSpeed;
 	ptr += 2;
 	*((u16*)ptr++) = (u16)cfg.UartCfg.uart_pack;
-	*((u16*)ptr++) = cfg.actMask;
 	*((u16*)ptr++) = cfg.debounce;
+	*((u16*)ptr++) = cfg.actMask;
 }
 
 void importCfgFromMemAndSave(void)
 {
-	Config cfg = {0};
 	u16 *ptr = memMapRegs[0].dataPoint;
 
 	cfg.address = (u8)*((u16*)ptr++);
 	cfg.uartSpeed = *((u32*)ptr);
 	ptr += 2;
 	cfg.UartCfg.uart_pack = *((u16*)ptr++);
-	cfg.actMask = *((u16*)ptr++);
 	cfg.debounce = *((u16*)ptr++);
+	cfg.actMask = *((u16*)ptr++);
+
+	//FIX restore write
+	//writeConfig();
 }

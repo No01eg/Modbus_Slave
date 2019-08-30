@@ -7,22 +7,6 @@
 #include "main.h"
 #include "ModBus/mb.h"
 
-
-//€чейки хранени€ регистров и дискрет
-/*u8 DIN[4] = {0x55, 0xaa, 0x03, 0x15};
-u8 DOUT[3];
-u16 AIN[3] = {123, 576, 10543};
-
-ModbusSlave mbSlave;*/
-
-//TODO подчистить
-// “ип текущей св€зи дл€ модбаса (Ethernet || RTU(RS485)
-//eMBMode MBConnect;
-// Ћокальный адресс устройства
-//u8 eMBLocalAddr;
-
-//ModbusSlave mbSlave;
-
 /* определение значение n-го бита в массиве битов
  * mask - массив хранени€ битов
  * maskLenght -
@@ -101,7 +85,7 @@ void MB_SlaveInit()
 	mbSlave.registerCount = memMapInputsRegs[1].count;
 	mbSlave.registers = (u16*)memMapInputsRegs[1].dataPoint;
 
-	mbSlave.address = 3;
+	mbSlave.address = cfg.address;
 
 	modbusSlaveInit(&mbSlave);
 }

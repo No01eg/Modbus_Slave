@@ -138,13 +138,28 @@ int main(void)
 	  {
 	  	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 	  	  //Разбор пакета (комплексный)
-		  modbusParseRequest(&mbSlave);
+	  	  ModbusError err = modbusParseRequest(&mbSlave);
 		  // сброс размера длины входного пакета, ибо по нему проверяем что к нам пришел пакет
 	  	  mbSlave.request.length = 0;
+	  	  if(err != MODBUS_ERROR_OK)
+	  	  {
+	  		RS485receiver.size = 0;
+	  		RS485receiver.timeout = 0;
+	  	  }
 	  	  // отправляем ответ
 	  	  HAL_UART_Transmit(&huart1, mbSlave.response.frame, mbSlave.response.length, 230);
 	  	  //HAL_Delay(100);
 	  	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+
+	  	  if(err == MODBUS_ERROR_OK && (mbSlave.request.frame[1] == 6 || mbSlave.request.frame[1] == 16))
+	  	  {
+	  		 importCfgFromMemAndSave();
+	  		 HAL_UART_DeInit(&huart1);
+	  		 MX_USART1_UART_Init();
+	  		 modbusSlaveEnd(&mbSlave);
+	  		 MB_SlaveInit();
+	  		 mbSlave.request.frame[1] = 0;
+	  	  }
 	  }
   }
   /* USER CODE END 3 */

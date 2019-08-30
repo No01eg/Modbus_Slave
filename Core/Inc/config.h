@@ -43,4 +43,6 @@ void preloadDefaultConfig(void/*Config *cfg*/);
 
 void exportConfigToMemMap(void);
 
+void importCfgFromMemAndSave(void);
+
 #endif /* INC_CONFIG_H_ */

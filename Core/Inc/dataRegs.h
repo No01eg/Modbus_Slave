@@ -11,7 +11,7 @@
 extern u8 DOUT[];
 
 extern u32 __time_check[];
-extern u8 DoutMask[];
+extern u8* DoutMask;//[];
 
 #include "mapAlloc.h"
 

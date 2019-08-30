@@ -21,7 +21,60 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "main.h"
+
 uartReceiver RS485receiver;
+
+/*Передача конфигурации RS232 в хендлер*/
+void Transf_UART_Settings(UART_HandleTypeDef *huart)
+{
+	huart->Init.BaudRate = cfg.uartSpeed;
+
+	/*бит четности входит в длину слова фрейма то бишь, если у нас фрейм 7 + бит четности, то databits д.б = 8*/
+	if(cfg.UartCfg.uart_unpk.parity != 0)
+		cfg.UartCfg.uart_unpk.databits++;
+	switch(cfg.UartCfg.uart_unpk.databits)
+	{
+		case 8:
+			huart->Init.WordLength = UART_WORDLENGTH_8B;
+			break;
+		case 9:
+			huart->Init.WordLength = UART_WORDLENGTH_9B;
+			break;
+		default:
+			huart->Init.WordLength = UART_WORDLENGTH_8B;
+			break;
+	}
+
+	switch(cfg.UartCfg.uart_unpk.stopbits)
+	{
+		case 1:
+			huart->Init.StopBits = UART_STOPBITS_1;
+			break;
+		case 2:
+			huart->Init.StopBits = UART_STOPBITS_2;
+			break;
+		default:
+			huart->Init.StopBits = UART_STOPBITS_1;
+			break;
+	}
+
+	switch(cfg.UartCfg.uart_unpk.parity)
+	{
+		case 0: //none
+			huart->Init.Parity = UART_PARITY_NONE;
+			break;
+		case 1: //odd
+			huart->Init.Parity = UART_PARITY_ODD;
+			break;
+		case 2: //even
+			huart->Init.Parity = UART_PARITY_EVEN;
+			break;
+		default:
+			huart->Init.Parity = UART_PARITY_NONE;
+			break;
+	}
+}
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -33,10 +86,11 @@ void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  /*huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Parity = UART_PARITY_NONE;*/
+  Transf_UART_Settings(&huart1);
   huart1.Init.Mode = UART_MODE_TX_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
