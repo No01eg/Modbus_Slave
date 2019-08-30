@@ -158,6 +158,9 @@ int main(void)
 	  		 MX_USART1_UART_Init();
 	  		 modbusSlaveEnd(&mbSlave);
 	  		 MB_SlaveInit();
+	  		 HAL_UART_Receive_DMA(&huart1, &RS485receiver.rcv, 1);
+	  		 RS485receiver.size = 0;
+	  		 RS485receiver.timeout = 0;
 	  		 mbSlave.request.frame[1] = 0;
 	  	  }
 	  }

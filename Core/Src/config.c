@@ -60,7 +60,7 @@ void writeConfig(void/*const Config *cfg*/)
 	__FlashErase(CONFIG_PAGE, 1);
 
 	//запись структуры конфигурации циклично пишет слова по 4 байта до конца структуры или сектора
-	for (uint32_t i = 0;
+	for (u32 i = 0;
 		(i < sizeof(cfg) / WORD_SIZE)
 			& ((CONFIG_PAGE + i * WORD_SIZE) < CONFIG_END_PAGE);
 			i++)

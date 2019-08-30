@@ -101,6 +101,9 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+#define ACT_INPUT_MACRO_L (*((u8*)(memMapRegs[0].dataPoint + 10)))
+#define ACT_INPUT_MACRO_H (*((u8*)(memMapRegs[0].dataPoint + 10)))
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	/*GPIO_TypeDef *GPIO = (GPIO_Pin & 0x1ff) ? GPIOA : GPIOB;
@@ -129,8 +132,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 	}*/
 	/* сразу перенаправляем байт в массив, побитно - долго*/
-	*((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint) = ~((GPIOA->IDR) & 0xff & DoutMask[0]);
-	*((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint + 1) = ~((GPIOB->IDR >> 8) & 0xff & DoutMask[1]);
+	/*u8 *ptr = (u8*)memMapRegs[0].dataPoint;
+	ptr += 10;
+	u8 *ptr_1 = ((u8*)memMapRegs[0].dataPoint + 10);
+	u8 preset_low = ACT_INPUT_MACRO_L;
+	u8 preset_high = ACT_INPUT_MACRO_H;*/
+	*((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint) = ~((GPIOA->IDR) & 0xff) & ACT_INPUT_MACRO_L;//DoutMask[0]);
+	*((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint + 1) = ~((GPIOB->IDR >> 8) & 0xff/*(cfg.actMask >> 8)*/) & ACT_INPUT_MACRO_H;
 
 }
 /* USER CODE END 2 */
