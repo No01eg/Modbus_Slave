@@ -118,7 +118,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   //инициализация карты данных
   allocateDataInMap();
-  configToMemMap();
+  exportConfigToMemMap();
+
+  //подготовка RS485 к работе
+  RS485receiver.size = 0;
+  RS485receiver.timeout = 0;
+
   // конфигурация Slave modbus
   MB_SlaveInit();
 

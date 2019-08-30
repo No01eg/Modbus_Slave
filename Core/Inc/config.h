@@ -41,6 +41,6 @@ void writeConfig(void/*const Config *cfg*/);
 /* Предустановка конфигурации по умолчанию */
 void preloadDefaultConfig(void/*Config *cfg*/);
 
-void configToMemMap(void);
+void exportConfigToMemMap(void);
 
 #endif /* INC_CONFIG_H_ */

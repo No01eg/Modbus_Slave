@@ -88,7 +88,7 @@ void preloadDefaultConfig(void/*Config *cfg*/)
 /*
  *
  * */
-void configToMemMap(void)
+void exportConfigToMemMap(void)
 {
 	u16 *ptr = memMapRegs[0].dataPoint;
 	*((u16*)ptr++) = cfg.address;
@@ -97,4 +97,17 @@ void configToMemMap(void)
 	*((u16*)ptr++) = (u16)cfg.UartCfg.uart_pack;
 	*((u16*)ptr++) = cfg.actMask;
 	*((u16*)ptr++) = cfg.debounce;
+}
+
+void importCfgFromMemAndSave(void)
+{
+	Config cfg = {0};
+	u16 *ptr = memMapRegs[0].dataPoint;
+
+	cfg.address = (u8)*((u16*)ptr++);
+	cfg.uartSpeed = *((u32*)ptr);
+	ptr += 2;
+	cfg.UartCfg.uart_pack = *((u16*)ptr++);
+	cfg.actMask = *((u16*)ptr++);
+	cfg.debounce = *((u16*)ptr++);
 }
