@@ -125,6 +125,9 @@ int main(void)
   RS485receiver.timeout = 0;
   DebounseTime = 0;
 
+  //чтение состояний входов на момент инициализации
+  *((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint) = ~((GPIOA->IDR) & 0xff) & ACT_INPUT_MACRO_L;
+  *((u8*)memMapDigInput[AP_DIGIN_DATA_INPUTS].dataPoint + 1) = ~((GPIOB->IDR >> 8) & 0xff) & ACT_INPUT_MACRO_H;
   // конфигурация Slave modbus
   MB_SlaveInit();
 

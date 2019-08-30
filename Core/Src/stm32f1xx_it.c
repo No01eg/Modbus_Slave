@@ -29,8 +29,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-#define ACT_INPUT_MACRO_L (*((u8*)(memMapRegs[0].dataPoint + 10)))
-#define ACT_INPUT_MACRO_H (*((u8*)(memMapRegs[0].dataPoint + 10)))
+
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/

@@ -36,12 +36,12 @@ extern dataPage memMapInputsRegs[3];
 // инициализация карты размещения данных дискретов и регистров
 void allocateDataInMap(void);
 
-u8 getStatusBit(u8 index);
+/*u8 getStatusBit(u8 index);
 
 void setBitIntoRegPack(u8 *pack, u16 index);
 
 void resetBitIntoRegPack(u8 *pack, u16 index);
 
-u8 getBitFromRegPack(u8 *pack, u16 index);
+u8 getBitFromRegPack(u8 *pack, u16 index);*/
 
 #endif /* INC_DATAREGS_H_ */

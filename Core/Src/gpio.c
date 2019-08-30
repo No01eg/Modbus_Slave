@@ -101,8 +101,6 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
-//#define ACT_INPUT_MACRO_L (*((u8*)(memMapRegs[0].dataPoint + 10)))
-//#define ACT_INPUT_MACRO_H (*((u8*)(memMapRegs[0].dataPoint + 10)))
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {

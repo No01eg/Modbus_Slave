@@ -44,7 +44,8 @@ typedef unsigned long long u64;
 #include "dataRegs.h"
 #include "config.h"
 
-
+#define ACT_INPUT_MACRO_L (*((u8*)(memMapRegs[0].dataPoint + 10)))
+#define ACT_INPUT_MACRO_H (*((u8*)(memMapRegs[0].dataPoint + 10)))
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

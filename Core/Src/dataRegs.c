@@ -99,7 +99,7 @@ void allocateDataInMap(void)
 }
 
 /* Определение */
-u8 getStatusBit(u8 index)
+/*u8 getStatusBit(u8 index)
 {
 	return (DoutMask[index >> 3] >>(index % 8)) & 1;
 }
@@ -117,4 +117,4 @@ void resetBitIntoRegPack(u8 *pack, u16 index)
 u8 getBitFromRegPack(u8 *pack, u16 index)
 {
 	return (pack[index >> 3] >> (index % 8)) & 1;
-}
+}*/
